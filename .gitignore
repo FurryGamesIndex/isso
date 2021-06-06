@@ -122,3 +122,6 @@ ENV/
 # Rope project settings
 .ropeproject
 .mypy_cache
+
+# Vim swap files
+.*.swp
