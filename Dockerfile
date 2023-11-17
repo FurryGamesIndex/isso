@@ -5,13 +5,14 @@ COPY . .
 RUN make init js
 
 # Second, create virtualenv
-FROM python:3.8-buster AS venvBuilder
+FROM python:3.8-alpine AS venvBuilder
 WORKDIR /src/
 # Set TOX_ENV_NAME in order for the "build_py" command in setup.py to skip
 # building Javascript artifacts as they have already been created by the
 # "jsBuilder" step.
 ENV TOX_ENV_NAME=1
 COPY --from=jsBuilder /src .
+RUN apk add alpine-sdk libffi-dev
 RUN python3 -m venv /isso \
  && . /isso/bin/activate \
  && pip3 install --no-cache-dir --upgrade pip \
@@ -20,7 +21,7 @@ RUN python3 -m venv /isso \
  && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Third, create final repository
-FROM python:3.8-slim-buster
+FROM python:3.8-alpine
 WORKDIR /isso/
 COPY --from=venvBuilder /isso .
 
