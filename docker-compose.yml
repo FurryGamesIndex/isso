@@ -1,0 +1,18 @@
+version: "3"
+
+networks:
+  isso:
+    external: false
+
+services:
+  server:
+    image: isso:0.12.6.2-FGI-alpine
+    container_name: isso-fgi
+    restart: unless-stopped
+    networks:
+      - isso
+    volumes:
+      - ./data/config:/config
+      - ./data/db:/db
+    ports:
+      - "127.255.1.1:61080:8080"
